@@ -708,24 +708,43 @@ class vCenterHandler:
                             results["platforms"].append(nbt.platform(
                                 name=platform,
                                 ))
-                    results["virtual_machines"].append(nbt.virtual_machine(
-                        name=truncate(obj_name, max_len=64),
-                        cluster=cluster,
-                        comments=getattr(obj.config, "annotation", None),
-                        status=int(
-                            1 if obj.runtime.powerState == "poweredOn" else 0
-                            ),
-                        role="Server",
-                        platform=platform,
-                        memory=obj.config.hardware.memoryMB,
-                        disk=int(sum([
-                            comp.capacityInKB for comp in
-                            obj.config.hardware.device
-                            if isinstance(comp, vim.vm.device.VirtualDisk)
-                            ]) / 1024 / 1024),  # Kilobytes to Gigabytes
-                        vcpus=obj.config.hardware.numCPU,
-                        tags=self.tags
-                        ))
+                        results["virtual_machines"].append(nbt.virtual_machine(
+                            name=truncate(obj_name, max_len=64),
+                            cluster=cluster,
+                            comments=getattr(obj.config, "annotation", None),
+                            status=int(
+                                1 if obj.runtime.powerState == "poweredOn" else 0
+                                ),
+                            role="Server",
+                            platform=platform.strip(),
+                            memory=obj.config.hardware.memoryMB,
+                            disk=int(sum([
+                                comp.capacityInKB for comp in
+                                obj.config.hardware.device
+                                if isinstance(comp, vim.vm.device.VirtualDisk)
+                                ]) / 1024 / 1024),  # Kilobytes to Gigabytes
+                            vcpus=obj.config.hardware.numCPU,
+                            tags=self.tags
+                            ))
+                    else:
+                        results["virtual_machines"].append(nbt.virtual_machine(
+                            name=truncate(obj_name, max_len=64),
+                            cluster=cluster,
+                            comments=getattr(obj.config, "annotation", None),
+                            status=int(
+                                1 if obj.runtime.powerState == "poweredOn" else 0
+                                ),
+                            role="Server",
+                            platform=platform,
+                            memory=obj.config.hardware.memoryMB,
+                            disk=int(sum([
+                                comp.capacityInKB for comp in
+                                obj.config.hardware.device
+                                if isinstance(comp, vim.vm.device.VirtualDisk)
+                                ]) / 1024 / 1024),  # Kilobytes to Gigabytes
+                            vcpus=obj.config.hardware.numCPU,
+                            tags=self.tags
+                            ))
                     # If VMware Tools is not detected then we cannot reliably
                     # collect interfaces and IP addresses
                     if platform:
