@@ -663,7 +663,6 @@ class vCenterHandler:
                         results["interfaces"].append(nbt.device_interface(
                             device=truncate(obj_name, max_len=64),
                             name=nic_name,
-                            itype=0,  # Virtual
                             mac_address=vnic.spec.mac,
                             mtu=vnic.spec.mtu,
                             tags=self.tags,
@@ -758,7 +757,6 @@ class vCenterHandler:
                             results["virtual_interfaces"].append(
                                 nbt.vm_interface(
                                     virtual_machine=obj_name,
-                                    itype=0,
                                     name=truncate(nic_name, 64),
                                     mac_address=nic.macAddress,
                                     enabled=nic.connected,
