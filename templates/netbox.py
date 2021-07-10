@@ -269,7 +269,7 @@ class Templates:
             }
         return remove_empty_fields(obj)
 
-    def device_interface(self, device, name, itype, enabled=None, mtu=None,
+    def device_interface(self, device, name, itype=None, enabled=None, mtu=None,
                          mac_address=None, mgmt_only=None, description=None,
                          cable=None, mode=None, untagged_vlan=None,
                          tagged_vlans=None, tags=None):
@@ -281,7 +281,7 @@ class Templates:
         :param name: Name of the physical interface
         :type name: str
         :param itype: Type of interface `0` if Virtual else `32767` for Other
-        :type itype: int
+        :type itype: int,optional
         :param enabled: `True` if the interface is up else `False`
         :type enabled: bool,optional
         :param mtu: The configured MTU for the interface
@@ -674,7 +674,7 @@ class Templates:
             }
         return remove_empty_fields(obj)
 
-    def vm_interface(self, virtual_machine, name, itype=0, enabled=None,
+    def vm_interface(self, virtual_machine, name, enabled=None,
                      mtu=None, mac_address=None, description=None, mode=None,
                      untagged_vlan=None, tagged_vlans=None, tags=None):
         """
@@ -684,8 +684,6 @@ class Templates:
         :type virtual_machine: str
         :param name: Name of the physical interface
         :type name: str
-        :param itype: Type of interface `0` if Virtual else `32767` for Other
-        :type itype: str, optional
         :param enabled: `True` if the interface is up else `False`
         :type enabled: bool,optional
         :param mtu: The configured MTU for the interface
@@ -693,9 +691,7 @@ class Templates:
         :param mac_address: The MAC address of the interface
         :type mac_address: str, optional
         :param description: Description for the interface
-        :itype description: str, optional
         :param mode: `100` if access, `200` if tagged, or `300 if` tagged for all vlans
-        :itype mode: int, optional
         :param untagged_vlan: NetBox VLAN object id of untagged vlan
         :type untagged_vlan: int, optional
         :param tagged_vlans: List of NetBox VLAN object ids for tagged VLANs
@@ -706,11 +702,6 @@ class Templates:
         obj = {
             "virtual_machine": {"name": truncate(virtual_machine, max_len=64)},
             "name": name,
-            "itype": self._version_dependent(
-                nb_obj_type="interfaces",
-                key="type",
-                value=itype
-                ),
             "enabled": enabled,
             "mtu": mtu,
             "mac_address": mac_address.upper() if mac_address else None,
